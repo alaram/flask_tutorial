@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}TOTP Setup{% endblock %}
+
+{% block content %}
+  <h2>TOTP setup for {{ username }}</h2>
+
+  <p>Scan this QR with your authenticator app (Google Authenticator, Authy, etc.)</p>
+  <img src="{{ qr_data_uri }}" alt="TOTP QR" style="max-width:320px; height:auto;">
+
+  <p>Or manually enter the secret: <code>{{ secret }}</code></p>
+
+  <form method="post" class="totp-verify-form">
+    <label for="token">Enter code from your authenticator:</label>
+    <input id="token" name="token" required pattern="\d{6}" inputmode="numeric" />
+    <input type="hidden" name="username" value="{{ username }}">
+    <button type="submit">Verify & Enable</button>
+  </form>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul class="flashes">
+      {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+{% endblock %}

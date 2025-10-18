@@ -1,0 +1,14 @@
+{
+  "status": 302,
+  "text": "<!doctype html>\n<html lang=en>\n<title>Redirecting...</title>\n<h1>Redirecting...</h1>\n<p>You should be redirected automatically to the target URL: <a href=\"/auth/login\">/auth/login</a>. If not, click the link.\n",
+  "headers": {
+    "Server": "Werkzeug/3.1.3 Python/3.13.1",
+    "Date": "Sat, 18 Oct 2025 18:03:57 GMT",
+    "Content-Type": "text/html; charset=utf-8",
+    "Content-Length": "209",
+    "Location": "/auth/login",
+    "Vary": "Cookie",
+    "Set-Cookie": "session=eyJ1c2VyX2lkIjoyfQ.aPPWjQ.5af34yQVKs7Uy5g_-WbR-5nZEkk; HttpOnly; Path=/",
+    "Connection": "close"
+  }
+}

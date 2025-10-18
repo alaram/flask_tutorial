@@ -1,0 +1,16 @@
+/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/relay.py:16: SyntaxWarning: invalid escape sequence '\+'
+  LOGIN_HTML = """
+Relay proxy running on http://127.0.0.1:4000, forwarding to http://127.0.0.1:5001
+ * Serving Flask app 'relay'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:4000
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/relay.py:16: SyntaxWarning: invalid escape sequence '\+'
+  LOGIN_HTML = """
+ * Debugger is active!
+ * Debugger PIN: 847-631-923
+127.0.0.1 - - [18/Oct/2025 20:03:02] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [18/Oct/2025 20:03:02] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+127.0.0.1 - - [18/Oct/2025 20:03:57] "POST /phish-login HTTP/1.1" 200 -

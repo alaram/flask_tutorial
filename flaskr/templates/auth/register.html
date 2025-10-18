@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Register{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="username">Username</label>
+    <input name="username" id="username" required>
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" required>
+    <input type="submit" value="Register">
+  </form>
+{% endblock %}
+
+<script>
+/* base64url helpers */
+function b64uToBuffer(b64u) {
+  // base64url -> base64 -> ArrayBuffer
+  const b64 = b64u.replace(/-/g, "+").replace(/_/g, "/");
+  const pad = b64.length % 4;
+  const padded = b64 + (pad ? "=".repeat(4 - pad) : "");
+  const binary = atob(padded);
+  const len = binary.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes.buffer;
+}
+function bufferToB64u(buf) {
+  const bytes = new Uint8Array(buf);
+  let binary = "";
+  for (let i=0;i<bytes.byteLength;i++) binary += String.fromCharCode(bytes[i]);
+  let b64 = btoa(binary);
+  return b64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/,'');
+}
+
+/* Registration flow */
+async function registerWebAuthn(username) {
+  const r = await fetch("/webauthn/register/options", {
+    method: "POST", headers: {'Content-Type':'application/json'}, body: JSON.stringify({username})
+  });
+  const options = await r.json();
+  // convert challenge and user.id if present
+  options.publicKey.challenge = b64uToBuffer(options.publicKey.challenge);
+  if (options.publicKey.user && options.publicKey.user.id) {
+    // server used base64 for user.id; decode to ArrayBuffer
+    const u8 = Uint8Array.from(atob(options.publicKey.user.id), c => c.charCodeAt(0));
+    options.publicKey.user.id = u8;
+  }
+
+  const cred = await navigator.credentials.create({ publicKey: options.publicKey });
+  const payload = {
+    id: cred.id,
+    rawId: bufferToB64u(cred.rawId),
+    type: cred.type,
+    response: {
+      attestationObject: bufferToB64u(cred.response.attestationObject),
+      clientDataJSON: bufferToB64u(cred.response.clientDataJSON)
+    }
+  };
+  await fetch("/webauthn/register/complete", { method: "POST", headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+  alert("Registration finished");
+}
+
+/* Authentication flow */
+async function authenticateWebAuthn(username) {
+  const r = await fetch("/webauthn/auth/options", { method: "POST", headers: {'Content-Type':'application/json'}, body: JSON.stringify({username}) });
+  const options = await r.json();
+  options.publicKey.challenge = b64uToBuffer(options.publicKey.challenge);
+  if (options.publicKey.allowCredentials) {
+    options.publicKey.allowCredentials = options.publicKey.allowCredentials.map(c => ({
+      id: b64uToBuffer(c.id),
+      type: c.type,
+      transports: c.transports
+    }));
+  }
+  const assertion = await navigator.credentials.get({ publicKey: options.publicKey });
+  const payload = {
+    id: assertion.id,
+    rawId: bufferToB64u(assertion.rawId),
+    type: assertion.type,
+    response: {
+      authenticatorData: bufferToB64u(assertion.response.authenticatorData),
+      clientDataJSON: bufferToB64u(assertion.response.clientDataJSON),
+      signature: bufferToB64u(assertion.response.signature),
+      userHandle: assertion.response.userHandle ? bufferToB64u(assertion.response.userHandle) : null
+    }
+  };
+  const resp = await fetch("/webauthn/auth/complete", { method: "POST", headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+  const j = await resp.json();
+  if (j.status === "ok") alert("Authenticated!");
+  else alert("Auth failed: " + JSON.stringify(j));
+}
+</script>
