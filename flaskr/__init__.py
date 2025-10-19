@@ -42,8 +42,15 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
+    # Import MFA metadata logic, e.g. status, verify, setup
+    # and register the blueprint from the factory
     from . import mfa
     app.register_blueprint(mfa.bp)
+
+    # Import MFA metadata logic for HOTP & TOTP, e.g. status, verify, setup
+    # and register the blueprint from the factory    
+    from . import mfa_hotp_totp
+    app.register_blueprint(mfa_hotp_totp.bp)
 
     # Required du to CORS origin error from the browser
     CORS(app, resources={r"/webauthn/*": {"origins": ["http://127.0.0.1:4000", "http://127.0.0.1:5001"]}})
