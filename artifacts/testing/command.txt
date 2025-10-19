@@ -1,0 +1,21 @@
+1️⃣ Generate a TOTP secret
+curl -X POST http://127.0.0.1:5001/mfa/setup \
+  -H "Content-Type: application/json" \
+  -d '{"username": "alice"}'
+
+  json
+  {
+    "otpauth_url":"otpauth://totp/Flaskr:alice?secret=BBPHBCOTIP36PTAC66GUN23NJKJBVQUO&issuer=Flaskr",
+    "secret":"BBPHBCOTIP36PTAC66GUN23NJKJBVQUO",
+    "username":"alice"
+  }
+
+2️⃣ Scan with Authenticator QR code   
+http://127.0.0.1:5001/mfa/qrcode?uri=otpauth://totp/Flaskr:alice?secret=6YDZ2SYMTKRA6W6ZUK6L22ZDNGOZVWMH&issuer=Flaskr
+
+3️⃣ Verify TOTP
+curl -X POST http://127.0.0.1:5001/mfa/verify -H "Content-Type: application/json" -d '{"username": "alice", "code": "385164"}'
+
+4️⃣Confirm in Database
+sqlite> SELECT username, mfa_metadata FROM user WHERE username='alice';
+alice|{"type": "TOTP", "secret": "6YDZ2SYMTKRA6W6ZUK6L22ZDNGOZVWMH", "verified": true}

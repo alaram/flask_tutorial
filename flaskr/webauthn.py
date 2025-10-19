@@ -22,6 +22,7 @@ bp = Blueprint("webauthn", __name__, url_prefix="/webauthn")
 ART_WEBAUTHN = "artifacts/webauthn"
 os.makedirs(ART_WEBAUTHN, exist_ok=True)
 
+# Save trace of the WebAuthn operation
 def save_trace(name, obj):
     ts = time.strftime("%Y%m%d-%H%M%S")
     path = os.path.join(ART_WEBAUTHN, f"{ts}-{name}.json")
@@ -156,6 +157,7 @@ def register_complete():
     )
     db.commit()
 
+    # perform a trace of the registration process
     # incoming JSON from client
     req_json = request.get_json()
     save_trace("register-incoming", req_json)
@@ -269,6 +271,8 @@ def auth_complete():
     db.execute("UPDATE webauthn_credential SET sign_count = ? WHERE id = ?", (new_sign_count, cred_row["id"]))
     db.commit()
 
+    # when we finish the authentication
+    # save incoming assertion and verification result
     req_json = request.get_json()
     save_trace("auth-incoming", req_json)
 

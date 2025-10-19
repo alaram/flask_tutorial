@@ -1,13 +1,15 @@
 import os
 
 from flask import Flask
-
 from flask_cors import CORS
 
 def create_app(test_config=None):
+
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     
+    # Setup to define the App address
+    # This information will be used for Relay with TOTP / WebAuthn
     app.config['WEBAUTHN_RP_ID'] = '127.0.0.1'
     app.config['WEBAUTHN_ORIGIN'] = 'http://127.0.0.1:5001'
     app.config['WEBAUTHN_RP_NAME'] = 'Flaskr Demo'
@@ -31,25 +33,31 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
-    
-    # Import and register the init.db from the factory    
+    # Import DB and register it from the factory    
     from . import db
     db.init_app(app)
 
-    # Import and register the blueprint from the factory
+    # Import Authorization, e.g. login & register
+    # and register the blueprint from the factory
     from . import auth
     app.register_blueprint(auth.bp)
 
+    from . import mfa
+    app.register_blueprint(mfa.bp)
+
+    # Required du to CORS origin error from the browser
     CORS(app, resources={r"/webauthn/*": {"origins": ["http://127.0.0.1:4000", "http://127.0.0.1:5001"]}})
 
-    # Import and register the blueprint from the factory
+    # Import Webauthn and register the blueprint from the factory
     from . import webauthn
-    app.register_blueprint(webauthn.bp)
+    app.register_blueprint(webauthn.bp, url_prefix="/webauthn")
+    
+    # A simple page that says hello and check that works
+    @app.route('/hello')
+    def hello():
+        return 'Hello, World! It works'
 
+    # Healt check for the Flask App
     @app.route("/health")
     def _health():
         return "OK"
