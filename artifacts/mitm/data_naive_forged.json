@@ -1,0 +1,9 @@
+{
+  "body": {
+    "action": "view",
+    "resource": "account",
+    "user": "alice",
+    "is_admin": true
+  },
+  "sig": "b8aee6159243a11f7040b59d06800b34ac6608088442b5ccca863364de5e50e8"
+}

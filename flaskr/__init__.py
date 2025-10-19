@@ -51,6 +51,10 @@ def create_app(test_config=None):
     # Import Webauthn and register the blueprint from the factory
     from . import webauthn
     app.register_blueprint(webauthn.bp, url_prefix="/webauthn")
+
+    # Import API HMAC and register the blueprint from the factory
+    from . import api_hmac
+    app.register_blueprint(api_hmac.bp)
     
     # A simple page that says hello and check that works
     @app.route('/hello')
