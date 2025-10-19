@@ -21,10 +21,7 @@ def register():
         username = request.form['username']
         password = request.form['password']
         
-        #db = get_db()
-        #error = None
-
-       # Generate salt
+        # Generate salt
         salt = os.urandom(16).hex()
 
         # Choose your hash method

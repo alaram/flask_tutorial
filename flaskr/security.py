@@ -7,6 +7,10 @@ import time
 
 from argon2 import PasswordHasher
 
+# --- Pepper Configuration ---
+# Normally stored in a secure config or environment variable
+SYSTEM_PEPPER = b"SuperSecretPepperKey"
+
 # Argon2 instance with moderate cost
 argon2_hasher = argon2.PasswordHasher(
     time_cost=3,        # Number of iterations
@@ -99,5 +103,41 @@ def compare_algorithms(password="Password123!"):
         else:
             print(f"✖ {algo} verification failed.")
 
+def hash_with_pepper(password: str, algo: str = "argon2", use_pepper: bool = True) -> str:
+    """Same as hash_password but includes a system-wide pepper if enabled."""
+    if use_pepper:
+        password = password + SYSTEM_PEPPER.decode()
+    return hash_password(password, algo)
+
+
+def verify_with_pepper(password: str, stored_hash: str, use_pepper: bool = True) -> bool:
+    """Verify a password when pepper is applied."""
+    if use_pepper:
+        password = password + SYSTEM_PEPPER.decode()
+    return verify_password(password, stored_hash)
+
+def salt_vs_pepper_demo():
+    print("\n=== Salt vs. Pepper Demonstration ===\n")
+    password = "Password123!"
+
+    # Same password hashed twice with different salts (per-user)
+    hash1 = hash_password(password, "sha256")
+    hash2 = hash_password(password, "sha256")
+
+    print("Per-user salt demonstration:")
+    print("Hash 1:", hash1[:60], "...")
+    print("Hash 2:", hash2[:60], "...")
+    print("→ Even for the same password, hashes differ due to random salt.\n")
+
+    # Pepper demonstration
+    hash_peppered = hash_with_pepper(password, "sha256", use_pepper=True)
+    print("System pepper demonstration:")
+    print("Hash (peppered):", hash_peppered[:60], "...")
+    print("Verification with correct pepper:", verify_with_pepper(password, hash_peppered))
+    print("Verification without pepper:", verify_password(password, hash_peppered))
+    print("→ Without knowing the pepper, verification fails — showing higher cracking difficulty.")
+
+
 if __name__ == "__main__":
-    compare_algorithms()        
+    compare_algorithms()  
+    salt_vs_pepper_demo()      
