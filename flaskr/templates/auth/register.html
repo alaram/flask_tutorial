@@ -12,9 +12,21 @@
     <input type="password" name="password" id="password" required>
     <input type="submit" value="Register">
   </form>
-{% endblock %}
+
+<hr>
+<h3>Or register with a Security Key / Passkey</h3>
+
+<p>Enter a username (same as above) and click below to register a WebAuthn credential:</p>
+
+<input id="webauthn-username" placeholder="username (e.g. alice)" />
+<button id="register-webauthn" type="button">Register with Security Key</button>
+
+<div id="webauthn-status" style="margin-top:8px;color:#444;font-size:0.9em;"></div>
+
 
 <script>
+  console.log("✅ WebAuthn script loaded");
+
 /* base64url helpers */
 function b64uToBuffer(b64u) {
   // base64url -> base64 -> ArrayBuffer
@@ -93,3 +105,4 @@ async function authenticateWebAuthn(username) {
   else alert("Auth failed: " + JSON.stringify(j));
 }
 </script>
+{% endblock %}
