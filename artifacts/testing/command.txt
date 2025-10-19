@@ -19,3 +19,96 @@ curl -X POST http://127.0.0.1:5001/mfa/verify -H "Content-Type: application/json
 4️⃣Confirm in Database
 sqlite> SELECT username, mfa_metadata FROM user WHERE username='alice';
 alice|{"type": "TOTP", "secret": "6YDZ2SYMTKRA6W6ZUK6L22ZDNGOZVWMH", "verified": true}
+
+
+# HMAC & integrity
+1) Start your Flask app 
+2) Fetch the naive-signed message 
+curl -sS http://127.0.0.1:5001/api/v1/data_naive | jq .
+{
+  "body": {
+    "action": "view",
+    "resource": "account",
+    "user": "alice"
+  },
+  "sig": "b8aee6159243a11f7040b59d06800b34ac6608088442b5ccca863364de5e50e8"
+}
+3) Post back the same (verifier should accept)
+curl -sS -H "Content-Type: application/json" -d @artifacts/mitm/data_naive.json http://127.0.0.1:5001/api/v1/submit_naive | jq .
+{ "ok": true }
+
+4) Post the forged message to the naive verifier
+curl -sS -H "Content-Type: application/json" -d @artifacts/mitm/data_naive_forged.json http://127.0.0.1:5001/api/v1/submit_naive | jq .
+{"ok": true}
+
+5) Attempt the same against the HMAC endpoint — it must fail
+curl -sS http://127.0.0.1:5001/api/v1/data_hmac > artifacts/mitm/data_hmac.json
+curl -sS -H "Content-Type: application/json" -d @artifacts/mitm/data_naive_forged.json http://127.0.0.1:5001/api/v1/submit_hmac | jq .
+{ "ok": false }
+
+
+# MFA TOTP & HOTP
+
+A - Enroll TOTP (control)
+curl -sS -X POST http://127.0.0.1:5001/mfa_hotp_totp/setup \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","type":"totp"}' | jq .
+
+  {
+  "otpauth_url": "otpauth://totp/Flaskr:alice?secret=G2RAY5RZF2C4KSWLULRETBWRE2FSSJUP&issuer=Flaskr",
+  "qr": "artifacts/qrs/alice-totp-qr.png",
+  "secret": "G2RAY5RZF2C4KSWLULRETBWRE2FSSJUP",
+  "type": "totp",
+  "username": "alice"
+}
+
+curl -sS -X POST http://127.0.0.1:5001/mfa_hotp_totp/verify \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","code":"qrcode","type":"totp","window":1,"source":"control"}' | jq .
+{
+  "ok": true
+}
+
+B — Enroll HOTP (control) — set initial counter (e.g., 0)
+curl -sS -X POST http://127.0.0.1:5001/mfa_hotp_totp/setup \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","type":"hotp","initial_counter":0}' | jq .
+
+curl -sS -X POST http://127.0.0.1:5001/mfa_hotp_totp/verify \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","code":"qrcode","type":"hotp","window":0,"source":"control"}' | jq .
+{
+  "ok": true
+} 
+
+C - Demonstrate HOTP counter desync
+python3
+Python 3.13.1 (main, Dec  3 2024, 17:59:52) [Clang 16.0.0 (clang-1600.0.26.4)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import pyotp
+>>> s = "3ZEUH52QY36ZVKBKZGEPJQR6VOHN5WOX"
+>>> hotp = pyotp.HOTP(s)
+>>> print(hotp.at(10))
+131746
+>>> quit
+(.venv) alanramos@MacBook-Pro-som-tillhor-Alan flask-tutorial % curl -sS -X POST http://127.0.0.1:5001/mfa_hotp_totp/verify \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","code":"131746","type":"hotp","window":0,"source":"desync-test"}' | jq .
+
+{
+  "ok": false
+}
+
+A — Count total attempts / successes / failures per user
+# total attempts
+jq -s 'length' artifacts/logs/otp_attempts.log
+
+# per-user success/failure
+jq -c . artifacts/logs/otp_attempts.log | jq -s 'group_by(.username)[] | {username: .[0].username, total: length, successes: (map(select(.result==true))|length), failures: (map(select(.result==false))|length)}'
+
+
+B — Time-series (recent N attempts)
+tail -n 200 artifacts/logs/otp_attempts.log | jq -s .
+
+C — Example: show HOTP desync events (where matched_offset is not 0)
+jq -c 'select(.type=="hotp" and .matched_offset!=null and .matched_offset>0)' artifacts/logs/otp_attempts.log
