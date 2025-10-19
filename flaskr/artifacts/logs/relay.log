@@ -14,3 +14,77 @@ Relay proxy running on http://127.0.0.1:4000, forwarding to http://127.0.0.1:500
 127.0.0.1 - - [18/Oct/2025 20:03:02] "GET / HTTP/1.1" 200 -
 127.0.0.1 - - [18/Oct/2025 20:03:02] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
 127.0.0.1 - - [18/Oct/2025 20:03:57] "POST /phish-login HTTP/1.1" 200 -
+ * Detected change in '/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/flaskr/webauthn.py', reloading
+Relay proxy running on http://127.0.0.1:4000, forwarding to http://127.0.0.1:5001
+[RELAY] Incoming: GET /favicon.ico -> http://127.0.0.1:5001/favicon.ico
+[RELAY] Forwarded: GET favicon.ico -> 404
+[relay] logged artifacts/mitm/20251018-200357-captured_otp.json
+[relay] logged artifacts/mitm/20251018-200357-forwarded_otp_response.json
+ * Restarting with stat
+/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/relay.py:16: SyntaxWarning: invalid escape sequence '\+'
+  LOGIN_HTML = """
+ * Debugger is active!
+ * Debugger PIN: 847-631-923
+ * Detected change in '/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/flaskr/webauthn.py', reloading
+Relay proxy running on http://127.0.0.1:4000, forwarding to http://127.0.0.1:5001
+ * Restarting with stat
+/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/relay.py:16: SyntaxWarning: invalid escape sequence '\+'
+  LOGIN_HTML = """
+ * Debugger is active!
+ * Debugger PIN: 847-631-923
+ * Detected change in '/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/flaskr/webauthn.py', reloading
+Relay proxy running on http://127.0.0.1:4000, forwarding to http://127.0.0.1:5001
+ * Restarting with stat
+/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/relay.py:16: SyntaxWarning: invalid escape sequence '\+'
+  LOGIN_HTML = """
+ * Debugger is active!
+ * Debugger PIN: 847-631-923
+ * Detected change in '/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/flaskr/__init__.py', reloading
+Relay proxy running on http://127.0.0.1:4000, forwarding to http://127.0.0.1:5001
+ * Restarting with stat
+/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/relay.py:16: SyntaxWarning: invalid escape sequence '\+'
+  LOGIN_HTML = """
+ * Debugger is active!
+ * Debugger PIN: 847-631-923
+ * Detected change in '/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/flaskr/mfa.py', reloading
+Relay proxy running on http://127.0.0.1:4000, forwarding to http://127.0.0.1:5001
+ * Restarting with stat
+/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/relay.py:16: SyntaxWarning: invalid escape sequence '\+'
+  LOGIN_HTML = """
+ * Debugger is active!
+ * Debugger PIN: 847-631-923
+ * Detected change in '/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/flaskr/__init__.py', reloading
+Relay proxy running on http://127.0.0.1:4000, forwarding to http://127.0.0.1:5001
+ * Restarting with stat
+/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/relay.py:16: SyntaxWarning: invalid escape sequence '\+'
+  LOGIN_HTML = """
+ * Debugger is active!
+ * Debugger PIN: 847-631-923
+ * Detected change in '/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/flaskr/__init__.py', reloading
+Relay proxy running on http://127.0.0.1:4000, forwarding to http://127.0.0.1:5001
+ * Restarting with stat
+/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/relay.py:16: SyntaxWarning: invalid escape sequence '\+'
+  LOGIN_HTML = """
+ * Debugger is active!
+ * Debugger PIN: 847-631-923
+ * Detected change in '/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/flaskr/__init__.py', reloading
+Relay proxy running on http://127.0.0.1:4000, forwarding to http://127.0.0.1:5001
+ * Restarting with stat
+/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/relay.py:16: SyntaxWarning: invalid escape sequence '\+'
+  LOGIN_HTML = """
+ * Debugger is active!
+ * Debugger PIN: 847-631-923
+ * Detected change in '/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/flaskr/__init__.py', reloading
+Relay proxy running on http://127.0.0.1:4000, forwarding to http://127.0.0.1:5001
+ * Restarting with stat
+/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/relay.py:16: SyntaxWarning: invalid escape sequence '\+'
+  LOGIN_HTML = """
+ * Debugger is active!
+ * Debugger PIN: 847-631-923
+ * Detected change in '/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/flaskr/__init__.py', reloading
+Relay proxy running on http://127.0.0.1:4000, forwarding to http://127.0.0.1:5001
+ * Restarting with stat
+/Users/alanramos/Documents/MscCybersecurity/Computer_Security-D7076E/Labs/Lab3/flask/flask-tutorial/relay.py:16: SyntaxWarning: invalid escape sequence '\+'
+  LOGIN_HTML = """
+ * Debugger is active!
+ * Debugger PIN: 847-631-923
