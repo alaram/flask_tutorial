@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS user;
 
+-- User table
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT UNIQUE NOT NULL,
@@ -9,7 +10,7 @@ CREATE TABLE user (
   mfa_metadata TEXT
 );
 
--- Add this to your schema.sql
+-- MFA metadata
 CREATE TABLE IF NOT EXISTS webauthn_credential (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
